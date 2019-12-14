@@ -1,8 +1,8 @@
 
 test url:
-https://optic-genuine.codio.io/jq_parse_test.html?homework-1
+./index.html?homework-1
 
-https://optic-genuine.codio.io/jq_parse_test.html?homework-2
+./index.html?homework-2
 
 
 URL search param parse to get the page to load
