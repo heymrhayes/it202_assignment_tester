@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <style>
+        body {background-color: snow;}
+    </style>
+</head>
+<body>
+    <div id="response">
+        
+    </div>
+	
+    <script src="./tests.js"></script>
+    <script>
+        
+        // get assignment from URL
+        var assignmentName = location.search.slice(1,location.search.length);
+        console.log(assignmentName)
+        
+        // get assignment from assignments
+        var filteredAssignments = assignments.filter( el => {
+            return el.name == assignmentName;
+        });
+        
+        
+        var assignment = filteredAssignments[0];
+
+        
+        $("body div#response").load(assignment.url, function(response) {
+            console.log(response);
+            
+            for (var i = 0; i < assignment.tests.length; i++) {
+                var test = assignment.tests[i];
+                var result = eval(test.script);
+                if (result == test.expectedResult) {
+                    console.log(test.id + " success");
+                } else {
+                    console.log(test.id + " failure; expected result is " + test.expectedResult + ", your result is " + result);
+                }
+    
+            }
+                        
+        })
+        
+        checkForStyle = (selector="",property="", value="") => {
+            var foundCount = 0;
+            
+            var args = {};
+            
+            for (var i of ["selector","property","value"]) {
+                args[i] = {"expected": eval(i), "found": false}
+            }            
+            
+            /*
+             *  loop through the style sheets and check for selector property and value
+             */
+            
+            var foundCount = 0;
+            var expectedCount = 0;
+            for (var ss of document.styleSheets) {
+                for (var rule of ss.rules) {
+                    if (rule.selectorText == selector) {
+                        args["selector"].found = true;
+                        if (args["selector"].found && property != "") {
+                           var DOMName = cssPropertyToDOM[property];
+                           if (rule.style[DOMName] != "") {
+                               args["property"].found = true;
+                               if (args["property"].found && value != "") {                                  
+                                   if (rule.style[DOMName] == value) {
+                                       args["value"].found = true; 
+                                   }
+                               } 
+                           }
+                       }              
+                    }
+                }
+            }
+            
+            
+            for (var k in args) {
+                if (args[k].expected != "" && args[k].found) {
+                    foundCount += 1;
+                }
+            }
+                        console.log(args);
+            return foundCount;
+        }
+        
+        
+        
+        
+        
+        var cssPropertyToDOM = {
+            "background":"background",
+            "background-attachment":"backgroundAttachment",
+            "background-color":"backgroundColor",
+            "background-image":"backgroundImage",
+            "background-position":"backgroundPosition",
+            "background-repeat":"backgroundRepeat",
+            "border":"border",
+            "border-bottom":"borderBottom",
+            "border-bottom-color":"borderBottomColor",
+            "border-bottom-style":"borderBottomStyle",
+            "border-bottom-width":"borderBottomWidth",
+            "border-color":"borderColor",
+            "border-left":"borderLeft",
+            "border-left-color":"borderLeftColor",
+            "border-left-style":"borderLeftStyle",
+            "border-left-width":"borderLeftWidth",
+            "border-right":"borderRight",
+            "border-right-color":"borderRightColor",
+            "border-right-style":"borderRightStyle",
+            "border-right-width":"borderRightWidth",
+            "border-style":"borderStyle",
+            "border-top":"borderTop",
+            "border-top-color":"borderTopColor",
+            "border-top-style":"borderTopStyle",
+            "border-top-width":"borderTopWidth",
+            "border-width":"borderWidth",
+            "clear":"clear",
+            "clip":"clip",
+            "color":"color",
+            "cursor":"cursor",
+            "display":"display",
+            "filter":"filter",
+            "float":"cssFloat",
+            "font":"font",
+            "font-family":"fontFamily",
+            "font-size":"fontSize",
+            "font-variant":"fontVariant",
+            "font-weight":"fontWeight",
+            "height":"height",
+            "left":"left",
+            "letter-spacing":"letterSpacing",
+            "line-height":"lineHeight",
+            "list-style":"listStyle",
+            "list-style-image":"listStyleImage",
+            "list-style-position":"listStylePosition",
+            "list-style-type":"listStyleType",
+            "margin":"margin",
+            "margin-bottom":"marginBottom",
+            "margin-left":"marginLeft",
+            "margin-right":"marginRight",
+            "margin-top":"marginTop",
+            "overflow":"overflow",
+            "padding":"padding",
+            "padding-bottom":"paddingBottom",
+            "padding-left":"paddingLeft",
+            "padding-right":"paddingRight",
+            "padding-top":"paddingTop",
+            "page-break-after":"pageBreakAfter",
+            "page-break-before":"pageBreakBefore",
+            "position":"position",
+            "stroke-dasharray":"strokeDasharray",
+            "stroke-dashoffset":"strokeDashoffset",
+            "stroke-width":"strokeWidth",
+            "text-align":"textAlign",
+            "text-decoration":"textDecoration",
+            "text-indent":"textIndent",
+            "text-transform":"textTransform",
+            "top":"top",
+            "vertical-align":"verticalAlign",
+            "visibility":"visibility",
+            "width":"width",
+            "z-index":"zIndex"
+        }
+    </script>
+</body>
+</html>
